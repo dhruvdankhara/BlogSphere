@@ -63,7 +63,7 @@ function Login() {
                     placeholder="example@mail.com"
                     {...register("email", {
                       required: true,
-                      value: "dhruv@gmail.com",
+                      value: "",
                     })}
                   />
                   <Input
@@ -72,7 +72,7 @@ function Login() {
                     placeholder="••••••••"
                     {...register("password", {
                       required: true,
-                      value: "dhruv123",
+                      value: "",
                     })}
                   />
                   <div className="flex items-center justify-start">

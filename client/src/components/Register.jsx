@@ -66,7 +66,7 @@ function Register() {
                     placeholder="john doe"
                     {...register("name", {
                       required: true,
-                      value: "dhruv dankhara",
+                      value: "",
                     })}
                   />
                   <Input
@@ -75,7 +75,7 @@ function Register() {
                     placeholder="example@mail.com"
                     {...register("email", {
                       required: true,
-                      value: "dhruvdankhara@gmail.com",
+                      value: "",
                     })}
                   />
                   <Input
@@ -84,7 +84,7 @@ function Register() {
                     placeholder="user123"
                     {...register("username", {
                       required: true,
-                      value: "dhruvdankhara",
+                      value: "",
                     })}
                   />
                   <Input
@@ -93,7 +93,7 @@ function Register() {
                     placeholder="••••••••"
                     {...register("password", {
                       required: true,
-                      value: "dhruv123",
+                      value: "",
                     })}
                   />
                   {error ? (
