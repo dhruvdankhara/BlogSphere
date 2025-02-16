@@ -1,0 +1,15 @@
+/.vscode
+/node_modules
+.config.js
+bun.lockb
+eslint.config.js
+package-lock.json
+package.json
+postcss.config.js
+tailwind.config.js
+vite.config.js
+
+
+*.env
+.env
+.env*
