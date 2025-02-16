@@ -259,7 +259,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   user.resetTokenExpiration = resetTokenExpiration;
   await user.save();
 
-  const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+  const resetUrl = `${process.env.CORS_ORIGIN}/reset-password/${resetToken}`;
   const message = `
           <h3>Password Reset Request</h3>
           <p>You requested a password reset. Click the button below to reset your password:</p>
@@ -298,8 +298,8 @@ export const resetPassword = async (req, res) => {
   if (user.resetTokenExpiration < Date.now()) {
     return res.status(400).json({ message: "Token expired" });
   }
-  const hashedpassword = await bcrypt.hash(newPassword, 8);
-  user.password = hashedpassword;
+  // const hashedpassword = await bcrypt.hash(newPassword, 8);
+  user.password = newPassword;
   user.resetToken = undefined;
   user.resetTokenExpiration = undefined;
 

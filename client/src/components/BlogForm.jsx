@@ -26,26 +26,13 @@ function BlogForm({ blogData }) {
     }
   };
 
-  useEffect(() => {
-    const subscription = watch((value, { name }) => {
-      if (name === "title") {
-        setValue("slug", value.title.trim().split(" ").join("-"), {
-          shouldValidate: true,
-        });
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [setValue, watch]);
-
-  const submit = async ({ title, slug, featureImage }) => {
+  const submit = async ({ title, featureImage }) => {
     if (isEdit) {
       const editPostToast = toast.loading("Updating blog post...");
       setLoading(true);
 
       const formData = new FormData();
       formData.append("title", title);
-      formData.append("slug", slug);
       formData.append("content", content);
 
       if (featureImage) {
@@ -121,15 +108,6 @@ function BlogForm({ blogData }) {
                 required: true,
                 value: blogData?.title || "",
               })}
-            />
-            <Input
-              label="Slug"
-              placeholder="url-friendly-version-of-title"
-              {...register("slug", {
-                required: true,
-                value: blogData?.slug || "",
-              })}
-              disabled="true"
             />
 
             <Editor value={content} setValue={setContent} />
