@@ -332,4 +332,4 @@ This project is licensed under the ISC License. See the [LICENSE](LICENSE) file 
 
 ---
 
-_Last updated: December 2025_
+_Last updated: December 2024_
