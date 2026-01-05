@@ -11,8 +11,8 @@ import {
   getAllBlogPosts,
   likeBlogPost,
   unlikeBlogPost,
-  getPopularBlogPosts,
   searchBlogPosts,
+  generateBlogImage,
 } from "../controllers/blog.controller.js";
 import upload from "../middlewares/multer.middlewares.js";
 import {
@@ -22,12 +22,12 @@ import {
 
 const router = Router();
 
+router.route("/generate-image").post(generateBlogImage);
+
 router
   .route("/")
   .get(getAllBlogPosts)
   .post(verifyJWT, upload.single("featureImage"), createBlogPost);
-
-router.route("/popular").get(getPopularBlogPosts);
 
 router
   .route("/:blogId")

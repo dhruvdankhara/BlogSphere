@@ -2,12 +2,133 @@
 @tailwind components;
 @tailwind utilities;
 
+/* @layer base {
+  * {
+    @apply border-gray-300;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+  }
+} */
+
 h1 {
   font-size: 30px;
   font-weight: 500;
+  @apply text-gray-900;
+}
+
+h2 {
+  font-size: 25px;
+  font-weight: 500;
+  @apply text-gray-900;
 }
 
 h3 {
   font-size: 20px;
   font-weight: 500;
+  @apply text-gray-900;
+}
+
+mark {
+  background-color: #faf594;
+  border-radius: 0.4rem;
+  box-decoration-break: clone;
+  padding: 0.1rem 0.3rem;
+}
+
+.ProseMirror {
+  @apply leading-relaxed selection:bg-blue-200/60 selection:text-blue-900;
+}
+
+.ProseMirror p {
+  @apply mb-4;
+}
+
+.ProseMirror blockquote {
+  @apply my-4 rounded-r-xl border-l-4 border-blue-500 bg-blue-50/80 pl-4 italic text-gray-700;
+}
+
+/* Inline code */
+.ProseMirror code {
+  @apply rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-pink-600;
+}
+/* Code block */
+.ProseMirror pre {
+  @apply relative my-5 overflow-x-auto rounded-xl border border-gray-300 bg-gray-50 p-4 font-mono text-sm leading-6;
+}
+.ProseMirror pre code {
+  @apply bg-transparent p-0 text-blue-700; /* override inline code styles inside block */
+}
+
+.ProseMirror ul {
+  @apply my-4 list-disc space-y-1 pl-6;
+}
+.ProseMirror ol {
+  @apply my-4 list-decimal space-y-1 pl-6;
+}
+.ProseMirror li > p {
+  @apply mb-1;
+}
+
+.ProseMirror a {
+  @apply font-medium text-blue-600 underline decoration-blue-400/50 underline-offset-4 transition-colors hover:text-blue-700;
+}
+
+/* Placeholder (from Placeholder extension) */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply pointer-events-none float-left h-0 text-gray-400;
+}
+
+/* Selected node highlight (e.g., image) */
+.ProseMirror .ProseMirror-selectednode {
+  @apply rounded-lg ring-2 ring-blue-500;
+}
+
+/* blog post styling */
+.post-content {
+  @apply mt-8 space-y-5 text-lg leading-relaxed;
+}
+.post-content p {
+  @apply mb-4;
+}
+.post-content h1 {
+  @apply mb-4 mt-8 text-3xl font-bold text-gray-900;
+}
+.post-content h2 {
+  @apply mb-4 mt-8 text-2xl font-semibold text-gray-900;
+}
+.post-content h3 {
+  @apply mb-3 mt-6 text-xl font-semibold text-gray-900;
+}
+.post-content blockquote {
+  @apply my-6 rounded-r-xl border-l-4 border-blue-500 bg-blue-50/80 pl-4 italic text-gray-700;
+}
+.post-content ul {
+  @apply my-5 list-disc space-y-1 pl-6;
+}
+.post-content ol {
+  @apply my-5 list-decimal space-y-1 pl-6;
+}
+.post-content li > p {
+  @apply mb-1;
+}
+.post-content a {
+  @apply font-medium text-blue-600 underline decoration-blue-400/50 underline-offset-4 transition-colors hover:text-blue-700;
+}
+.post-content pre {
+  @apply my-6 overflow-x-auto rounded-xl border border-gray-300 bg-gray-50 p-4 font-mono text-sm leading-6;
+}
+.post-content code {
+  @apply rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-pink-600;
+}
+.post-content pre code {
+  @apply bg-transparent p-0 text-blue-700;
+}
+.post-content img {
+  @apply mx-auto my-6 max-w-full rounded-xl ring-1 ring-gray-300;
+}
+.post-content hr {
+  @apply my-10 border-gray-300;
 }

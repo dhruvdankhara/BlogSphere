@@ -7,8 +7,6 @@ import {
   changeCurrentPassword,
   changeAvatar,
   updateUser,
-  forgotPassword,
-  resetPassword,
 } from "../controllers/auth.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/multer.middlewares.js";
@@ -28,9 +26,5 @@ router.post("/change-password", verifyJWT, changeCurrentPassword);
 router.post("/update-avatar", verifyJWT, upload.single("avatar"), changeAvatar);
 
 router.post("/update-user", verifyJWT, updateUser);
-
-router.post("/forgot-password", forgotPassword);
-
-router.post("/reset-password/:token", resetPassword);
 
 export default router;

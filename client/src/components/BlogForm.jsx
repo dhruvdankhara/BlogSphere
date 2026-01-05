@@ -1,32 +1,76 @@
-import { useEffect, useRef, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { LuImage } from "react-icons/lu";
-import { createPost, editPost } from "../api";
-import { Container, Button, Input } from "./index";
-import Editor from "./Editor";
+import { LuImage, LuSparkles } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
+import { createPost, editPost, generateImageApi } from "../api";
+import { Container } from "./index";
+import RichEditor from "./RichEditor.jsx";
 
 function BlogForm({ blogData }) {
-  const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState(blogData?.content || "");
   const isEdit = blogData ? true : false;
+
+  const [loading, setLoading] = useState(false);
+  const [generatingImage, setGeneratingImage] = useState(false);
+
+  const [title, setTitle] = useState(blogData?.title || "");
+  const [content, setContent] = useState(blogData?.content || "");
+  const [featureImage, setFeatureImage] = useState();
+  const [generatedImageUrl, setGeneratedImageUrl] = useState("");
 
   const navigate = useNavigate();
 
   const fileInputRef = useRef(null);
-  const { handleSubmit, register, setValue, watch } = useForm();
-
-  const featureImage = watch("featureImage");
 
   const handleImageUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setValue("featureImage", e.target.files[0]);
+      setFeatureImage(e.target.files[0]);
+      setGeneratedImageUrl("");
     }
   };
 
-  const submit = async ({ title, featureImage }) => {
+  const handleGenerateImage = async () => {
+    const prompt = (title || "").trim();
+
+    if (!prompt) {
+      toast.error("Please enter a title first.");
+      return;
+    }
+
+    const genToast = toast.loading("Generating image...");
+    setGeneratingImage(true);
+
+    try {
+      const response = await generateImageApi(prompt);
+      const url = response?.data?.imageUrl;
+
+      if (!url) {
+        throw new Error("No image URL returned");
+      }
+
+      setGeneratedImageUrl(url);
+      setFeatureImage(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      toast.success("Image generated.", { id: genToast });
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to generate image";
+      toast.error(message, { id: genToast });
+      console.log("🚀 ~ generate image ~ error:", error);
+    } finally {
+      setGeneratingImage(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (isEdit) {
       const editPostToast = toast.loading("Updating blog post...");
       setLoading(true);
@@ -37,14 +81,15 @@ function BlogForm({ blogData }) {
 
       if (featureImage) {
         formData.append("featureImage", featureImage);
+      } else if (generatedImageUrl) {
+        formData.append("featureImageUrl", generatedImageUrl);
       }
 
       try {
         const response = await editPost({
-          blogId: blogData.slug,
+          blogId: blogData?.slug,
           data: formData,
         });
-        console.log("🚀 ~ handleSubmit ~ response:", response);
 
         toast.success("Blog post Updated successfully.", {
           id: editPostToast,
@@ -53,12 +98,9 @@ function BlogForm({ blogData }) {
       } catch (error) {
         console.log("🚀 ~ edit post submit ~ error:", error);
 
-        toast.error(
-          error.response?.data?.message || "Error in blog post editing.",
-          {
-            id: editPostToast,
-          }
-        );
+        toast.error(error.response.data.message, {
+          id: editPostToast,
+        });
       } finally {
         setLoading(false);
       }
@@ -70,25 +112,24 @@ function BlogForm({ blogData }) {
       formData.append("title", title);
       formData.append("slug", uuidv4());
       formData.append("content", content);
-      formData.append("featureImage", featureImage);
+
+      if (featureImage) {
+        formData.append("featureImage", featureImage);
+      } else if (generatedImageUrl) {
+        formData.append("featureImageUrl", generatedImageUrl);
+      }
 
       try {
         const response = await createPost(formData);
-        console.log("🚀 ~ create post submit ~ response:", response);
 
         toast.success("Blog post Uploaded successfully.", {
           id: postingToast,
         });
         navigate(`/blog/${response.data.slug}`);
       } catch (error) {
-        console.log("🚀 ~ create post submit ~ error:", error);
-
-        toast.error(
-          error.response?.data?.message || "Error in blog post uploading.",
-          {
-            id: postingToast,
-          }
-        );
+        toast.error(error.response.data.message, {
+          id: postingToast,
+        });
       } finally {
         setLoading(false);
       }
@@ -98,94 +139,185 @@ function BlogForm({ blogData }) {
   return (
     <div className="my-10">
       <Container>
-        <div className="mx-auto max-w-3xl">
-          <h1 className="mb-4 text-3xl font-bold">Create a New Blog Post</h1>
-          <form className="space-y-4" onSubmit={handleSubmit(submit)}>
-            <Input
-              label="Title"
-              placeholder="Enter your blog post title"
-              {...register("title", {
-                required: true,
-                value: blogData?.title || "",
-              })}
-            />
+        <div className="mx-auto max-w-6xl">
+          <h1 className="mb-4 text-3xl font-bold text-gray-900">
+            {isEdit ? "Edit Blog Post" : "Create a New Blog Post"}
+          </h1>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-start">
+              <div className="space-y-4">
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={"title"}
+                    className="text-base font-medium capitalize text-gray-700"
+                  >
+                    Title
+                  </label>
+                  <input
+                    type={"text"}
+                    placeholder="Enter your blog post title"
+                    className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                    id={"title"}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
 
-            <Editor value={content} setValue={setContent} />
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={"content"}
+                    className="text-base font-medium capitalize text-gray-700"
+                  >
+                    Content
+                  </label>
+                  <RichEditor value={content} setValue={setContent} />
+                </div>
+              </div>
 
-            <div>
-              <label htmlFor="featureImage">Feature Image</label>
-              <div className="mt-1 flex items-center space-x-2">
-                <Button
-                  type="button"
-                  onClick={() => {
-                    if (fileInputRef.current) {
-                      fileInputRef.current.click();
-                    }
-                  }}
-                  className="flex w-full items-center justify-center border border-gray-300 bg-white text-zinc-900 shadow-sm hover:bg-slate-200/70"
+              <div>
+                <label
+                  htmlFor="featureImage"
+                  className="text-base font-medium capitalize text-gray-700"
                 >
-                  <LuImage className="mr-2 h-4 w-4" />
-                  {featureImage ? "Change Image" : "Upload Image"}
-                </Button>
+                  Feature Image
+                </label>
 
-                {featureImage && (
-                  <Button
+                <div className="mt-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <LuSparkles className="h-4 w-4 text-blue-700" />
+                    <p className="text-sm font-semibold text-blue-900">
+                      AI image generation
+                    </p>
+                  </div>
+                  <p className="mt-1 text-sm text-blue-800/80">
+                    Generate a cover image from the title above.
+                  </p>
+
+                  <div className="mt-3 flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 md:flex-row">
+                      <button
+                        type="button"
+                        onClick={handleGenerateImage}
+                        disabled={generatingImage || !title.trim()}
+                        className="flex w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
+                      >
+                        {generatingImage ? (
+                          <span className="inline-block size-6 animate-spin rounded-full border-4 border-transparent border-t-white"></span>
+                        ) : (
+                          <span className="flex items-center gap-2">
+                            <LuSparkles className="h-4 w-4" />
+                            Generate Image
+                          </span>
+                        )}
+                      </button>
+
+                      {generatedImageUrl && (
+                        <button
+                          type="button"
+                          onClick={() => setGeneratedImageUrl("")}
+                          className="flex w-full items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm transition-all duration-300 hover:bg-gray-50 md:text-base"
+                        >
+                          Remove Generated
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex items-center space-x-2">
+                  <button
                     type="button"
                     onClick={() => {
-                      setValue("featureImage", null);
                       if (fileInputRef.current) {
-                        fileInputRef.current.value = "";
+                        fileInputRef.current.click();
                       }
                     }}
-                    className="flex items-center justify-center border border-gray-300 bg-white text-zinc-900 shadow-sm hover:bg-slate-200/70"
+                    className="flex w-full items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-2 text-sm font-semibold text-gray-900 shadow-sm transition-all duration-300 hover:bg-gray-50 md:text-base"
                   >
-                    Remove
-                  </Button>
-                )}
-              </div>
-              <input
-                id="featureImage"
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-              <div className="mt-4 rounded-xl border-2 px-5 py-3">
+                    <LuImage className="mr-2 h-4 w-4" />
+                    {featureImage ? "Change Image" : "Upload Image"}
+                  </button>
+
+                  {(featureImage || generatedImageUrl) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFeatureImage(null);
+                        setGeneratedImageUrl("");
+                        if (fileInputRef.current) {
+                          fileInputRef.current.value = "";
+                        }
+                      }}
+                      className="flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-2 text-sm font-semibold text-gray-900 shadow-sm transition-all duration-300 hover:bg-gray-50 md:text-base"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                <input
+                  id="featureImage"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+
                 {featureImage && (
-                  <>
-                    <p className="text-muted-foreground mt-2 text-sm">
-                      Selected file: {featureImage.name}
+                  <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 px-5 py-3">
+                    <p className="mt-2 text-sm text-gray-600">
+                      Selected file:{" "}
+                      <span className="text-gray-900">{featureImage.name}</span>
                     </p>
                     <img
-                      className="mx-auto aspect-video h-96 w-5/6 rounded-lg bg-cover object-cover"
+                      className="mx-auto aspect-video h-80 w-full rounded-lg object-cover ring-1 ring-gray-200"
                       src={URL.createObjectURL(featureImage)}
-                      alt=""
+                      alt="Selected feature"
                     />
-                  </>
+                  </div>
                 )}
-                {blogData && !featureImage ? (
-                  <img
-                    className="mx-auto aspect-video h-96 w-5/6 rounded-lg bg-cover object-cover"
-                    src={blogData.featureImage}
-                    alt=""
-                  />
-                ) : null}
+
+                {generatedImageUrl && !featureImage && (
+                  <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 px-5 py-3">
+                    <p className="mt-2 text-sm text-gray-600">
+                      Using generated image
+                    </p>
+                    <img
+                      className="mx-auto aspect-video h-80 w-full rounded-lg object-cover ring-1 ring-gray-200"
+                      src={generatedImageUrl}
+                      alt="Generated cover"
+                    />
+                  </div>
+                )}
+
+                {blogData && !featureImage && !generatedImageUrl && (
+                  <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 px-5 py-3">
+                    <img
+                      className="mx-auto aspect-video h-80 w-full rounded-lg object-cover ring-1 ring-gray-200"
+                      src={blogData.featureImage}
+                      alt="Current feature"
+                    />
+                  </div>
+                )}
               </div>
             </div>
-            <Button
-              type="submit"
-              className="flex w-full items-center justify-center bg-zinc-800 hover:bg-zinc-900"
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="inline-block size-6 animate-spin rounded-full border-4 border-e-slate-700"></span>
-              ) : isEdit ? (
-                "Update Post"
-              ) : (
-                "Publish Post"
-              )}
-            </Button>
+
+            <div className="flex w-full justify-stretch md:justify-end">
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 md:w-72 md:text-base"
+                disabled={loading || generatingImage}
+              >
+                {loading ? (
+                  <span className="inline-block size-6 animate-spin rounded-full border-4 border-transparent border-t-white"></span>
+                ) : isEdit ? (
+                  "Update Post"
+                ) : (
+                  "Publish Post"
+                )}
+              </button>
+            </div>
           </form>
         </div>
       </Container>

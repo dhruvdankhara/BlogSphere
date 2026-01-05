@@ -6,12 +6,12 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { deleteImage, uploadImage } from "../utils/cloudinary.js";
+import { generateBlogImageFromTitle } from "../utils/helper.js";
 
 export const createBlogPost = asyncHandler(async (req, res) => {
-  // TODO: add topics feature using id and file this id with database queries.
   const user = req.user;
   const file = req.file;
-  const { title, content, slug } = req.body;
+  const { title, content, slug, featureImageUrl } = req.body;
 
   await createBlogPostSchema.validate({ title, content, slug });
 
@@ -24,6 +24,8 @@ export const createBlogPost = asyncHandler(async (req, res) => {
   let imageUrl = "";
   if (file) {
     imageUrl = await uploadImage(file.path);
+  } else if (featureImageUrl) {
+    imageUrl = { secure_url: featureImageUrl };
   }
 
   const blog = await Blog.create({
@@ -73,7 +75,7 @@ export const deleteBlogPost = asyncHandler(async (req, res) => {
 
 export const editBlogPost = asyncHandler(async (req, res) => {
   const { blogId } = req.params;
-  const { title, content, slug } = req.body;
+  const { title, content, slug, featureImageUrl } = req.body;
   const file = req.file;
 
   const blog = await Blog.findOne({ slug: blogId });
@@ -96,6 +98,8 @@ export const editBlogPost = asyncHandler(async (req, res) => {
   if (file) {
     const cloudinaryResponse = await uploadImage(file.path);
     blog.featureImage = cloudinaryResponse.secure_url;
+  } else if (featureImageUrl) {
+    blog.featureImage = featureImageUrl;
   }
 
   if (title) blog.title = title;
@@ -232,55 +236,6 @@ export const getAllBlogPosts = asyncHandler(async (req, res) => {
   return res.status(response.statusCode).json(response);
 });
 
-export const getPopularBlogPosts = asyncHandler(async (req, res) => {
-  const blog = await Blog.aggregate([
-    {
-      $lookup: {
-        from: "users",
-        localField: "userId",
-        foreignField: "_id",
-        as: "author",
-        pipeline: [
-          {
-            $project: {
-              username: 1,
-              avatar: 1,
-              email: 1,
-              _id: 1,
-              name: 1,
-            },
-          },
-        ],
-      },
-    },
-    {
-      $addFields: {
-        author: {
-          $first: "$author",
-        },
-      },
-    },
-    {
-      $project: {
-        userId: 0,
-        __v: 0,
-      },
-    },
-    {
-      $sort: {
-        visits: -1,
-      },
-    },
-  ]);
-
-  const response = new ApiResponse(
-    200,
-    blog,
-    "Popular blog posts retrieved successfully"
-  );
-  return res.status(response.statusCode).json(response);
-});
-
 export const likeBlogPost = asyncHandler(async (req, res) => {
   const { blogId } = req.params;
 
@@ -385,6 +340,23 @@ export const searchBlogPosts = asyncHandler(async (req, res) => {
     200,
     blog,
     "Search results retrieved successfully"
+  );
+  return res.status(response.statusCode).json(response);
+});
+
+export const generateBlogImage = asyncHandler(async (req, res) => {
+  const { title } = req.body;
+
+  if (!title) {
+    throw new ApiError(400, "Title is required to generate blog image");
+  }
+
+  const results = await generateBlogImageFromTitle(title);
+
+  const response = new ApiResponse(
+    200,
+    { imageUrl: results },
+    "Blog image generated successfully"
   );
   return res.status(response.statusCode).json(response);
 });

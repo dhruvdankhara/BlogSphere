@@ -2,7 +2,7 @@ import { Register as RegisterComponent } from "../components/index";
 
 function Register() {
   return (
-    <div className="py-7">
+    <div className="">
       <RegisterComponent />
     </div>
   );

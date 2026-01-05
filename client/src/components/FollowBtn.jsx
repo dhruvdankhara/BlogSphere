@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { followUser, unfollowUser } from "../api/index";
-import { Button } from "./index";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -23,8 +22,7 @@ function FollowBtn({ userData, setUserData }) {
     setLoading(true);
 
     try {
-      const response = await followUser(userData.username);
-      console.log("🚀 ~ follow ~ response:", response);
+      await followUser(userData.username);
 
       setUserData((prev) => ({
         ...userData,
@@ -36,8 +34,7 @@ function FollowBtn({ userData, setUserData }) {
         id: followToast,
       });
     } catch (error) {
-      console.log("🚀 ~ follow ~ error:", error);
-      toast.error(error.response?.data?.message || "error in follow", {
+      toast.error(error.response.data.message, {
         id: followToast,
       });
     } finally {
@@ -51,8 +48,7 @@ function FollowBtn({ userData, setUserData }) {
     setLoading(true);
 
     try {
-      const response = await unfollowUser(userData.username);
-      console.log("🚀 ~ unfollow ~ response:", response);
+      await unfollowUser(userData.username);
 
       setUserData((prev) => ({
         ...prev,
@@ -63,9 +59,7 @@ function FollowBtn({ userData, setUserData }) {
         id: unfollowToast,
       });
     } catch (error) {
-      console.log("🚀 ~ unfollow ~ error:", error);
-
-      toast.error(error.response?.data?.message || "Error in unfollow", {
+      toast.error(error.response.data.message, {
         id: unfollowToast,
       });
     } finally {
@@ -76,21 +70,31 @@ function FollowBtn({ userData, setUserData }) {
   return (
     <div>
       {userData.isFollowing ? (
-        <Button onClick={unfollow} disabled={loading}>
+        <button
+          className={
+            "rounded-xl bg-blue-700 px-5 py-2 text-sm font-semibold text-white transition-all duration-300 md:text-base"
+          }
+          onClick={unfollow}
+          disabled={loading}
+        >
           {loading ? (
             <div className="inline-block size-7 animate-spin rounded-full border-4 border-e-blue-700"></div>
           ) : (
             "Unfollow"
           )}
-        </Button>
+        </button>
       ) : (
-        <Button onClick={follow} disabled={loading}>
+        <button
+          className="rounded-xl bg-blue-700 px-5 py-2 text-sm font-semibold text-white transition-all duration-300 md:text-base"
+          onClick={follow}
+          disabled={loading}
+        >
           {loading ? (
             <div className="inline-block size-7 animate-spin rounded-full border-4 border-e-blue-700"></div>
           ) : (
             "Follow"
           )}
-        </Button>
+        </button>
       )}
     </div>
   );

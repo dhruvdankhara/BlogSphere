@@ -1,14 +1,8 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { generateToken } from "../config/jwt.js";
 
-import {
-  AvailableUserGender,
-  AvailableUserRoles,
-  UserGenderEnum,
-  UserRolesEnum,
-} from "../constants.js";
+import { AvailableUserGender, UserGenderEnum } from "../constants.js";
 
 const userSchema = new Schema(
   {
@@ -37,24 +31,12 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      default: UserGenderEnum.MALE,
+      default: null,
       enum: AvailableUserGender,
     },
     avatar: {
       type: String,
       default: "",
-    },
-    role: {
-      type: String,
-      enum: AvailableUserRoles,
-      default: UserRolesEnum.USER,
-      required: true,
-    },
-    resetToken: {
-      type: String,
-    },
-    resetTokenExpiration: {
-      type: Date,
     },
   },
   { timestamps: true }
@@ -77,7 +59,6 @@ userSchema.methods.generateAccessToken = function () {
     name: this.name,
     username: this.username,
     email: this.email,
-    role: this.role,
     avatar: this.avatar,
   };
   return generateToken(payload);

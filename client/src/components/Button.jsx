@@ -1,7 +1,7 @@
 function Button({ children, className, disabled = false, ...props }) {
   return (
     <button
-      className={`rounded-xl bg-blue-700 px-5 py-2 text-sm font-semibold text-white transition-all duration-300 md:text-base ${className}`}
+      className={`rounded-2xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 md:text-base ${className}`}
       disabled={disabled}
       {...props}
     >

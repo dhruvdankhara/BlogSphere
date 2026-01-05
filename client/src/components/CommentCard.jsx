@@ -1,28 +1,9 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
+import {formatDate} from "../Hooks/FormateDate"
 
 export default function CommentCard({ createdAt, content, author, _id }) {
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const month = monthNames[date.getMonth()]; // Get month name
-    const year = date.getFullYear();
-    return `${day} ${month}, ${year}`;
-  }
+  
 
   return (
     <div className="flex w-full gap-3 p-3" key={_id}>

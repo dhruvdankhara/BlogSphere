@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import toast from "react-hot-toast";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import apiClient, { likeBlogPost, unlikeBlogPost } from "../api";
+import { likeBlogPost, unlikeBlogPost } from "../api";
 import { useSelector } from "react-redux";
 
 function LikeBtn({ _id, isLiked, likes, setPost }) {
@@ -15,15 +16,13 @@ function LikeBtn({ _id, isLiked, likes, setPost }) {
     const likeToast = toast.loading("Liking Post...");
 
     try {
-      const response = await likeBlogPost(_id);
-
-      console.log("🚀 ~ likePost ~ response:", response);
+      await likeBlogPost(_id);
 
       toast.success("Liked Post successfully.", { id: likeToast });
+
       setPost((prev) => ({ ...prev, isLiked: true, likes: likes + 1 }));
     } catch (error) {
-      console.log("🚀 ~ likePost ~ error:", error);
-      toast.error(error.response?.data?.message || "Error while liking post", {
+      toast.error(error.response.data.message, {
         id: likeToast,
       });
     }
@@ -33,20 +32,15 @@ function LikeBtn({ _id, isLiked, likes, setPost }) {
     const unlikeToast = toast.loading("Unliking Post...");
 
     try {
-      const response = await unlikeBlogPost(_id);
-
-      console.log("🚀 ~ unlikePost ~ response:", response);
+      await unlikeBlogPost(_id);
 
       toast.success("Unliked Post successfully.", { id: unlikeToast });
+
       setPost((prev) => ({ ...prev, isLiked: false, likes: likes - 1 }));
     } catch (error) {
-      console.log("🚀 ~ likePost ~ error:", error);
-      toast.error(
-        error.response?.data?.message || "Error while unliking post",
-        {
-          id: unlikeToast,
-        }
-      );
+      toast.error(error.response.data.message, {
+        id: unlikeToast,
+      });
     }
   };
 

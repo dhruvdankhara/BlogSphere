@@ -1,9 +1,9 @@
-import Blog from "../models/blog.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+import Blog from "../models/blog.model.js";
 import User from "../models/user.model.js";
 import Follow from "../models/follow.model.js";
-import { ApiError } from "../utils/ApiError.js";
 
 export const getUserProfile = asyncHandler(async (req, res) => {
   const username = req.params.username;

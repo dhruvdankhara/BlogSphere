@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ArrowRight, Monitor, Search, Globe, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -47,59 +47,48 @@ const Home = () => {
     },
   ];
 
+  const stats = [
+    { number: "10K+", label: "Active Users" },
+    { number: "50K+", label: "Blog Posts" },
+    { number: "99%", label: "Satisfaction" },
+  ];
+
   const heroImages = {
     main: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&auto=format&fit=crop&q=60",
-    floating:
-      "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&auto=format&fit=crop&q=60",
   };
-
-  const stats = [
-    {
-      number: "10K+",
-      label: "Active Users",
-      icon: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60",
-    },
-    {
-      number: "50K+",
-      label: "Blog Posts",
-      icon: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=60",
-    },
-    {
-      number: "99%",
-      label: "Satisfaction",
-      icon: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?w=800&auto=format&fit=crop&q=60",
-    },
-  ];
 
   const ctaImage =
     "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=60";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <section className="relative overflow-hidden py-24">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <div className="animate-fadeIn space-y-8 text-left">
-              <h1 className="text-6xl font-bold leading-tight text-gray-900">
+              <h1 className="text-5xl font-bold leading-tight text-gray-900 md:text-6xl">
                 Share Your Story with the{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 bg-clip-text text-transparent">
                   World
                 </span>
               </h1>
               <p className="text-xl leading-relaxed text-gray-600">
                 Create, publish, and grow your blog with our powerful platform
               </p>
-              <button className="group flex items-center space-x-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:shadow-lg">
-                <Link to={"/blogs"}>Get Started</Link>
+              <Link
+                to={"/blogs"}
+                className="group flex w-fit items-center space-x-2 rounded-full bg-blue-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-600/40"
+              >
+                <span>Get Started</span>
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
+              </Link>
             </div>
             <div className="animate-float relative">
               <img
                 src={heroImages.main}
                 alt="Dashboard Preview"
-                className="h-96 w-full rounded-2xl object-cover shadow-2xl"
+                className="h-96 w-full rounded-2xl object-cover shadow-xl ring-1 ring-gray-200"
               />
             </div>
           </div>
@@ -114,7 +103,7 @@ const Home = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="group transform rounded-2xl bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
+                className="group transform rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-200 transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
               >
                 <div className="relative mb-6 h-48 overflow-hidden rounded-xl">
                   <img
@@ -122,7 +111,7 @@ const Home = () => {
                     alt={feature.title}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div className="absolute left-4 top-4 rounded-lg bg-white p-2 shadow-md">
+                  <div className="absolute left-4 top-4 rounded-lg bg-white/95 p-2 shadow-md ring-1 ring-gray-200 backdrop-blur">
                     <feature.icon className="h-6 w-6 text-blue-600" />
                   </div>
                 </div>
@@ -138,19 +127,12 @@ const Home = () => {
         </section>
 
         {/* Stats Section */}
-        <section className="rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-600 py-20 text-white">
+        <section className="rounded-3xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 py-20 text-white shadow-xl ring-1 ring-blue-500">
           <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 md:grid-cols-3">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <img
-                  src={stat.icon}
-                  alt={stat.label}
-                  className="mx-auto mb-4 h-16 w-16 rounded-full object-cover"
-                />
-                <div className="mb-2 animate-pulse text-5xl font-bold">
-                  {stat.number}
-                </div>
-                <div className="text-lg opacity-90">{stat.label}</div>
+                <div className="mb-2 text-5xl font-bold">{stat.number}</div>
+                <div className="text-lg opacity-95">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -166,7 +148,7 @@ const Home = () => {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="overflow-hidden rounded-2xl bg-white shadow-sm"
+                  className="overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200"
                 >
                   <button
                     onClick={() =>
@@ -178,7 +160,7 @@ const Home = () => {
                       {faq.question}
                     </h3>
                     <ChevronDown
-                      className={`h-5 w-5 text-gray-500 transition-transform duration-300 ${
+                      className={`h-5 w-5 text-gray-600 transition-transform duration-300 ${
                         activeIndex === index ? "rotate-180" : ""
                       }`}
                     />
@@ -188,7 +170,7 @@ const Home = () => {
                       activeIndex === index ? "max-h-48" : "max-h-0"
                     }`}
                   >
-                    <p className="border-t p-6 leading-relaxed text-gray-600">
+                    <p className="border-t border-gray-200 p-6 leading-relaxed text-gray-600">
                       {faq.answer}
                     </p>
                   </div>
@@ -199,25 +181,25 @@ const Home = () => {
         </section>
 
         {/* Call to Action Section */}
-        <section className="relative my-20 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-600 py-24 text-white">
+        <section className="relative my-20 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 py-24 text-white shadow-2xl ring-1 ring-blue-500">
           <div className="bg-pattern absolute inset-0 opacity-10"></div>
           <div className="relative mx-auto max-w-3xl px-4 text-center">
             <div className="animate-float">
               <img
                 src={ctaImage}
                 alt="CTA Icon"
-                className="mx-auto mb-8 h-32 w-32 rounded-2xl object-cover shadow-lg"
+                className="mx-auto mb-8 h-32 w-32 rounded-2xl object-cover shadow-lg ring-1 ring-white/20"
               />
             </div>
             <h2 className="mb-6 text-4xl font-bold">
               Ready to Start Blogging?
             </h2>
-            <p className="mb-12 text-xl opacity-90">
+            <p className="mb-12 text-xl opacity-95">
               Join thousands of content creators who trust our platform
             </p>
             <Link
               to={"/register"}
-              className="group mx-auto flex w-fit items-center space-x-2 rounded-full bg-white px-8 py-4 font-semibold text-blue-600 transition-all duration-300 hover:shadow-lg"
+              className="group mx-auto flex w-fit items-center space-x-2 rounded-full bg-white px-8 py-4 font-semibold text-blue-700 transition-all duration-300 hover:bg-white/90 hover:shadow-2xl"
             >
               <p>Create Your Blog</p>
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -225,51 +207,6 @@ const Home = () => {
           </div>
         </section>
       </div>
-
-      <style jsx global>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-
-        @keyframes bounce-slow {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .animate-bounce-slow {
-          animation: bounce-slow 3s ease-in-out infinite;
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 1s ease-out forwards;
-        }
-      `}</style>
     </div>
   );
 };

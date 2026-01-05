@@ -14,10 +14,8 @@ import Register from "./pages/Register.jsx";
 import CreateBlog from "./pages/CreateBlog.jsx";
 import EditPost from "./pages/EditPost.jsx";
 import Profile from "./pages/Profile.jsx";
-import EditUser from "./pages/EditUser.jsx";
-import Explore from "./pages/Explore.jsx";
 import Search from "./pages/Search.jsx";
-import { ResetPassword, ForgotPassword } from "./components/index.js";
+import EditUser from "./pages/EditUser.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,10 +39,6 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/edit-user",
-        element: <EditUser />,
-      },
-      {
         path: "/blog/:slug",
         element: <Blog />,
       },
@@ -61,20 +55,12 @@ const router = createBrowserRouter([
         element: <EditPost />,
       },
       {
-        path: "/explore",
-        element: <Explore />,
-      },
-      {
         path: "/search",
         element: <Search />,
       },
       {
-        path: "/forgot-password",
-        element: <ForgotPassword />,
-      },
-      {
-        path: "/reset-password/:token",
-        element: <ResetPassword />,
+        path: "/edit-user",
+        element: <EditUser />,
       },
     ],
   },
@@ -83,6 +69,12 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <RouterProvider router={router} />
-    <Toaster />
+    <Toaster
+      position="top-right"
+      reverseOrder={false}
+      toastOptions={{
+        duration: 4000,
+      }}
+    />
   </Provider>
 );

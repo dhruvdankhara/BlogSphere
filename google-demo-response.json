@@ -1,0 +1,27 @@
+GenerateContentResponse {
+  sdkHttpResponse: {
+    headers: {
+      'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+      'content-encoding': 'gzip',
+      'content-type': 'application/json; charset=UTF-8',
+      date: 'Fri, 12 Dec 2025 06:32:57 GMT',
+      server: 'scaffolding on HTTPServer2',
+      'server-timing': 'gfet4t7; dur=7395',
+      'transfer-encoding': 'chunked',
+      vary: 'Origin, X-Origin, Referer',
+      'x-content-type-options': 'nosniff',
+      'x-frame-options': 'SAMEORIGIN',
+      'x-xss-protection': '0'
+    }
+  },
+  candidates: [ { content: [Object], finishReason: 'STOP', index: 0 } ],
+  modelVersion: 'gemini-2.5-flash-image',
+  responseId: 'Gbc7aZG3FOa2g8UPg5mawAQ',
+  usageMetadata: {
+    promptTokenCount: 17,
+    candidatesTokenCount: 1303,
+    totalTokenCount: 1320,
+    promptTokensDetails: [ [Object] ],
+    candidatesTokensDetails: [ [Object] ]
+  }
+}

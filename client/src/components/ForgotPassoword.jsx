@@ -14,7 +14,7 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const response = await forgotPassword(email);
+      await forgotPassword(email);
       setStatus({
         type: "success",
         message: "If this email is registered, a reset link has been sent.",
@@ -30,18 +30,18 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-11/12 max-w-md rounded-lg bg-white p-6 shadow-md">
-        <h1 className="mb-4 text-center text-2xl font-bold text-gray-800">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="w-11/12 max-w-md rounded-lg border border-gray-200 bg-white p-8 shadow-lg">
+        <h1 className="mb-4 text-center text-2xl font-bold text-gray-900">
           Forgot Password
         </h1>
-        <p className="mb-6 text-center text-sm text-gray-600">
+        <p className="mb-6 text-center text-sm text-gray-500">
           Enter your email address to receive a password reset link.
         </p>
 
         <button
-          onClick={() => navigate("/login")} // Navigate to the login page
-          className="mb-6 font-semibold text-red-500 hover:text-blue-700"
+          onClick={() => navigate("/login")}
+          className="mb-6 font-semibold text-blue-600 hover:text-blue-800"
         >
           Back to Login
         </button>
@@ -50,14 +50,14 @@ const ForgotPassword = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-800"
             >
               Email Address
             </label>
             <input
               type="email"
               id="email"
-              className="w-full rounded-md border px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -67,9 +67,9 @@ const ForgotPassword = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full rounded-md py-2 font-semibold text-white shadow-md ${
+            className={`w-full rounded-md py-2 font-semibold text-white shadow-md transition-colors ${
               loading
-                ? "cursor-not-allowed bg-blue-300"
+                ? "cursor-not-allowed bg-blue-400"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
@@ -78,10 +78,10 @@ const ForgotPassword = () => {
         </form>
         {status && (
           <div
-            className={`mt-4 rounded-md p-2 text-center text-sm font-medium ${
+            className={`mt-4 rounded-md p-3 text-center text-sm font-medium ${
               status.type === "success"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
+                ? "border border-green-200 bg-green-50 text-green-800"
+                : "border border-red-200 bg-red-50 text-red-800"
             }`}
           >
             {status.message}

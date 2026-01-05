@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { BlogForm } from "../components/index";
-import { getPost } from "../api";
 import { useParams } from "react-router-dom";
+import { BlogForm, Loader } from "../components/index";
+import { getPost } from "../api";
 
 function EditPost() {
   const [loading, setLoading] = useState(true);
@@ -12,14 +12,14 @@ function EditPost() {
   useEffect(() => {
     getPost(blogId)
       .then((response) => {
-        console.log("🚀 ~ getPost ~ response:", response);
         setBlogData(response.data);
       })
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
-    return <h1>Loading</h1>;
+    return <Loader />;
   }
 
   return <BlogForm blogData={blogData} />;

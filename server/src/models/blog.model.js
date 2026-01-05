@@ -29,12 +29,6 @@ const blogScheme = new Schema(
       type: Number,
       default: 0,
     },
-    topicId: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Topic",
-      },
-    ],
   },
   { timestamps: true }
 );

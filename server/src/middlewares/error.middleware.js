@@ -1,4 +1,3 @@
-import fs from "fs";
 import { ValidationError } from "yup";
 import { ApiError } from "../utils/ApiError.js";
 import { removeMulterImageFilesOnError } from "../utils/helper.js";

@@ -19,8 +19,7 @@ function App() {
           dispatch(logout());
         }
       })
-      .catch((error) => {
-        console.log("🚀 ~ Get loggedIn falied:", error);
+      .catch(() => {
         dispatch(logout());
       })
       .finally(() => {
@@ -30,8 +29,10 @@ function App() {
 
   return !loading ? (
     <>
-      <Header />
-      <Outlet />
+      <div className="flex min-h-screen flex-col bg-slate-100 pt-5">
+        <Header />
+        <Outlet />
+      </div>
     </>
   ) : (
     <Loader />

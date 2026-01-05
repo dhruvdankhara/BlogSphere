@@ -90,13 +90,12 @@ export const editPost = async ({ blogId, data }) => {
   return response.data;
 };
 
-export const getPopularPost = async () => {
-  const response = await apiClient.get("/blog/popular");
+export const generateImageApi = async (title) => {
+  const response = await apiClient.post("/blog/generate-image", { title });
   return response.data;
 };
 
 // comment
-
 export const createComment = async ({ blogId, content }) => {
   const response = await apiClient.post(`/blog/${blogId}/comment`, { content });
   return response.data;
@@ -129,18 +128,6 @@ export const unlikeBlogPost = async (blogId) => {
 
 export const searchPost = async (query) => {
   const response = await apiClient.get(`/blog/search/${query}`);
-  return response.data;
-};
-
-export const forgotPassword = async (email) => {
-  const response = await apiClient.post("/auth/forgot-password", { email });
-  return response.data;
-};
-
-export const resetPassword = async (token, newPassword) => {
-  const response = await apiClient.post(`/auth/reset-password/${token}`, {
-    newPassword,
-  });
   return response.data;
 };
 
